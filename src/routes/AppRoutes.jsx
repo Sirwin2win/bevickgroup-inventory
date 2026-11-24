@@ -8,6 +8,11 @@ import {
 
 import DashboardLayout from "../layout/DashboardLayout";
 
+// Authentication pages
+import Login from "../forms/Login";
+import Register from "../forms/Register";
+
+// Dashboard pages
 import Dashboard from "../pages/Dashboard";
 import Users from "../pages/Users";
 import Orders from "../pages/Orders";
@@ -18,9 +23,13 @@ function AppRoutes() {
   return (
     <Routes>
 
+      {/* Authentication Routes - No Dashboard Layout */}
+      <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
+
+      {/* Dashboard Routes */}
       <Route element={<DashboardLayout />}>
 
-        {/* Dashboard */}
         <Route
           path="/dashboard/overview"
           element={<Dashboard />}
@@ -31,9 +40,9 @@ function AppRoutes() {
           element={<Dashboard />}
         />
 
-        <Route 
-        path="/dashboard/inventory" 
-        element={<Inventory />} 
+        <Route
+          path="/dashboard/inventory"
+          element={<Inventory />}
         />
 
         <Route
@@ -63,14 +72,16 @@ function AppRoutes() {
 
       </Route>
 
+      {/* Default Entrance Page */}
       <Route
-        path="/"
-        element={<Navigate to="/dashboard/overview" replace />}
+        path="/login"
+        element={<Navigate to="/login" replace />}
       />
 
+      {/* Unknown Routes */}
       <Route
         path="*"
-        element={<Navigate to="/dashboard/overview" replace />}
+        element={<Navigate to="/login" replace />}
       />
 
     </Routes>
