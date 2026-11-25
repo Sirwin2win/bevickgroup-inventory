@@ -1,19 +1,25 @@
 
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { useNavigate, Link } from "react-router-dom";
+import { register } from "../features/auth/authSlice";
 import { Eye, EyeOff } from "lucide-react";
-import { Link } from "react-router-dom";
 import logo from "../assets/logo.jpg";
 import "./style.css";
 
 export default function Register() {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const auth = useSelector((state) => state.auth);
+ 
   const [showPassword, setShowPassword] = useState(false);
-
-  const [formData, setFormData] = useState({
+ const initialForm = {
     name: "",
-    phone: "",
     email: "",
+    phone: "",
     password: "",
-  });
+  };
+  const [formData, setFormData] = useState(initialForm);
 
   const handleChange = (e) => {
     setFormData({
@@ -22,10 +28,25 @@ export default function Register() {
     });
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("Registration Data:", formData);
-  };
+  const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  try {
+    const response = await dispatch(register(formData)).unwrap();
+
+    console.log("Registration successful:", response);
+
+    // Clear form
+    setFormData(initialForm);
+
+    // Redirect to pending activation page
+    navigate("/account-pending");
+
+  } catch (error) {
+    console.error("Registration failed:", error);
+  }
+};
+
 
   return (
     <div className="auth-container">
@@ -43,8 +64,8 @@ export default function Register() {
 
         {/* Heading */}
         <div className="auth-heading">
-          <h1>Create Account</h1>
-          <p>Register to get started</p>
+          <h1 className="text-center">Create Account</h1>
+          <p className="text-center">Register to get started</p>
         </div>
 
         {/* Form */}
@@ -92,38 +113,37 @@ export default function Register() {
             />
           </div>
 
-          <div className="auth-field">
-            <label htmlFor="password">Password</label>
+<div className="auth-field">
+  <label htmlFor="password">Password</label>
 
-            <div className="auth-password">
-              <input
-                id="password"
-                type={showPassword ? "text" : "password"}
-                name="password"
-                value={formData.password}
-                onChange={handleChange}
-                placeholder="Create a password"
-                autoComplete="new-password"
-                minLength={8}
-                required
-              />
+  <div className="password-input-wrapper">
+    <input
+      id="password"
+      type={showPassword ? "text" : "password"}
+      name="password"
+      value={formData.password}
+      onChange={handleChange}
+      placeholder="Create a password"
+      autoComplete="new-password"
+      minLength={8}
+      required
+    />
 
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                aria-label={
-                  showPassword ? "Hide password" : "Show password"
-                }
-                className="password-toggle"
-              >
-                {showPassword ? (
-                  <EyeOff size={20} />
-                ) : (
-                  <Eye size={20} />
-                )}
-              </button>
-            </div>
-          </div>
+    <button
+      type="button"
+      className="password-toggle"
+      onClick={() => setShowPassword((prev) => !prev)}
+      aria-label={showPassword ? "Hide password" : "Show password"}
+    >
+      {showPassword ? (
+        <EyeOff size={20} />
+      ) : (
+        <Eye size={20} />
+      )}
+    </button>
+  </div>
+</div>
+
 
           <button type="submit" className="auth-submit">
             Create Account

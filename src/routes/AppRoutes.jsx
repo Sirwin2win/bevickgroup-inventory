@@ -18,6 +18,7 @@ import Users from "../pages/Users";
 import Orders from "../pages/Orders";
 import Settings from "../pages/Settings";
 import Inventory from "../pages/Inventory";
+import AccountPending from "../components/AccountPending";
 
 function AppRoutes() {
   return (
@@ -71,18 +72,28 @@ function AppRoutes() {
         <Route path="/settings/notifications" element={<Settings />} />
 
       </Route>
+ {/* Default Entrance Page */}
+  <Route
+    path="/"
+    element={<Navigate to="/login" replace />}
+  />
 
-      {/* Default Entrance Page */}
-      <Route
-        path="/login"
-        element={<Navigate to="/login" replace />}
-      />
+  {/* Authentication */}
+  <Route path="/login" element={<Login />} />
 
-      {/* Unknown Routes */}
-      <Route
-        path="*"
-        element={<Navigate to="/login" replace />}
-      />
+  <Route path="/register" element={<Register />} />
+
+  {/* Account Pending */}
+  <Route
+    path="/account-pending"
+    element={<AccountPending />}
+  />
+
+  {/* Unknown Routes */}
+  <Route
+    path="*"
+    element={<Navigate to="/login" replace />}
+  />
 
     </Routes>
   );

@@ -1,0 +1,184 @@
+
+/* ==========================================
+   ACCOUNT PENDING ACTIVATION
+========================================== */
+
+.pending-card {
+  width: 100%;
+  max-width: 480px;
+  padding: 40px 35px;
+  text-align: center;
+  background: #ffffff;
+  border-radius: 18px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+  animation: pendingFadeIn 0.5s ease;
+}
+
+/* Pending Icon */
+.pending-icon {
+  width: 90px;
+  height: 90px;
+  margin: 0 auto 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff7e6;
+  color: #d97706;
+  border-radius: 50%;
+  border: 1px solid #fde68a;
+}
+
+.pending-icon svg {
+  stroke-width: 1.8;
+}
+
+/* Heading */
+.pending-card h1 {
+  font-size: 25px;
+  font-weight: 700;
+  color: #172033;
+  margin-bottom: 14px;
+  line-height: 1.3;
+}
+
+/* Description */
+.pending-card > p {
+  font-size: 14px;
+  line-height: 1.8;
+  color: #64748b;
+  margin-bottom: 28px;
+}
+
+/* Information Section */
+.pending-info {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  text-align: left;
+  padding: 22px 18px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  margin-bottom: 22px;
+}
+
+.pending-info > div {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  color: #475569;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.pending-info svg {
+  flex-shrink: 0;
+  color: #d97706;
+  margin-top: 1px;
+}
+
+/* Notice */
+.pending-notice {
+  padding: 15px;
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+  border-left: 4px solid #d97706;
+  border-radius: 8px;
+  color: #92400e;
+  font-size: 12px;
+  line-height: 1.7;
+  text-align: left;
+  margin-bottom: 25px;
+}
+
+/* Back to Login Button */
+.pending-card .auth-submit {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 48px;
+  padding: 13px 20px;
+  background: #2563eb;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: 8px;
+  border: none;
+  transition: all 0.25s ease;
+}
+
+.pending-card .auth-submit:hover {
+  background: #1d4ed8;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(37, 99, 235, 0.2);
+}
+
+/* Animation */
+@keyframes pendingFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ==========================================
+   RESPONSIVE DESIGN
+========================================== */
+
+@media (max-width: 600px) {
+  .pending-card {
+    max-width: 100%;
+    padding: 30px 22px;
+    border-radius: 14px;
+  }
+
+  .pending-icon {
+    width: 75px;
+    height: 75px;
+    margin-bottom: 20px;
+  }
+
+  .pending-icon svg {
+    width: 38px;
+    height: 38px;
+  }
+
+  .pending-card h1 {
+    font-size: 21px;
+  }
+
+  .pending-card > p {
+    font-size: 13px;
+  }
+
+  .pending-info {
+    padding: 18px 14px;
+    gap: 14px;
+  }
+
+  .pending-info > div {
+    font-size: 12px;
+  }
+
+  .pending-notice {
+    font-size: 11px;
+  }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .pending-card {
+    animation: none;
+  }
+
+  .pending-card .auth-submit {
+    transition: none;
+  }
+}
