@@ -36,8 +36,6 @@ const getInitialUser = () => {
     return null;
   }
 };
-
-
 // ==========================================
 // FETCH ALL USERS (ADMIN ONLY)
 // ==========================================
@@ -47,7 +45,7 @@ export const fetchUsers = createAsyncThunk(
     try {
       const token = localStorage.getItem("token");
 
-      const response = await axios.get(`${API_URL}`, {
+      const response = await axios.get(`${API_URL}/users`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -217,15 +215,12 @@ export const deleteMe = createAsyncThunk(
   }
 );
 
-
 export const updateRole = createAsyncThunk(
     'auth/updateRole',
     async ({ id, role }, thunkAPI) => {
 
         try {
-
             const token = localStorage.getItem('token');
-
             const response = await axios.put(
                 `${API_URL}/users/${id}/role`,
                 { role },
@@ -235,15 +230,11 @@ export const updateRole = createAsyncThunk(
                     }
                 }
             );
-
             return response.data;
-
         } catch (err) {
-
             return thunkAPI.rejectWithValue(
                 err.response?.data || err.message
             );
-
         }
     }
 );

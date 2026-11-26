@@ -1,7 +1,7 @@
-
 import React from "react";
 import { useLocation } from "react-router-dom";
 import { Plus } from "lucide-react";
+import UserRoleForm from "../forms/UserRoleForm";
 
 function Users() {
   const location = useLocation();
@@ -9,8 +9,8 @@ function Users() {
 
   const titles = {
     all: "All Users",
-    active: "Active Users",
-    add: "Add New User"
+    active: "Update User Roles",
+    add: "Assign Permissions to Roles"
   };
 
   return (
@@ -18,7 +18,7 @@ function Users() {
       <div className="page-heading">
         <div>
           <h2>{titles[currentTab]}</h2>
-          <p>Manage your application users.</p>
+          {/* <p>Manage your application users.</p> */}
         </div>
 
         {currentTab !== "add" && (
@@ -28,11 +28,19 @@ function Users() {
         )}
       </div>
 
-      {currentTab === "add" ? (
-        <p>User registration form goes here.</p>
-      ) : (
-        <p>Your users table goes here.</p>
-      )}
+      {currentTab === "add" &&
+      <div>
+        <p className="font-bold">Select roles and the tick the desired permissions</p>
+
+      </div>
+      }
+
+      {currentTab === "active" &&
+      <div>
+        <p className="font-bold text-center">Select the user and the appropriate Role and submit</p>
+        <UserRoleForm />
+      </div>
+      }
     </div>
   );
 }

@@ -11,8 +11,8 @@ const navigation = {
 
   users: [
     { title: "All Users", path: "/users/all" },
-    { title: "Active Users", path: "/users/active" },
-    { title: "Add User", path: "/users/add" }
+    { title: "User Roles", path: "/users/active" },
+    { title: "Assign Permissions", path: "/users/add" }
   ],
 
   orders: [
