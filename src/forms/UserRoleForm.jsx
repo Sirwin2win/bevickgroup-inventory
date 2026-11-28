@@ -1,6 +1,5 @@
 
 import React, { useEffect, useState } from 'react';
-
 import logo from '../assets/logo.jpg';
 
 import {
@@ -10,7 +9,6 @@ import {
 } from '../features/auth/authSlice';
 
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
 
 const UserRoleForm = () => {
 
@@ -22,10 +20,7 @@ const UserRoleForm = () => {
         error
     } = useSelector(state => state.auth);
 
-    const user = useSelector(state => state.auth.user);
-
     const dispatch = useDispatch();
-    const navigate = useNavigate();
 
     const [data, setData] = useState({
         id: '',
@@ -35,29 +30,22 @@ const UserRoleForm = () => {
     const [updating, setUpdating] = useState(false);
     const [submitError, setSubmitError] = useState('');
 
-    // Fetch all roles
+    // Fetch roles
     useEffect(() => {
-
         if (rolesStatus === 'idle') {
             dispatch(fetchRoles());
         }
-
     }, [rolesStatus, dispatch]);
 
-
-    // Fetch all users
+    // Fetch users
     useEffect(() => {
-
         if (status === 'idle') {
             dispatch(fetchUsers());
         }
-
     }, [status, dispatch]);
 
-
-    // Handle dropdown changes
+    // Handle changes
     const handleChange = (e) => {
-
         const { name, value } = e.target;
 
         setData(prev => ({
@@ -65,12 +53,11 @@ const UserRoleForm = () => {
             [name]: value
         }));
 
+        setSubmitError('');
     };
 
-
-    // Assign role to user
+    // Submit role assignment
     const handleSubmit = async (e) => {
-
         e.preventDefault();
 
         setSubmitError('');
@@ -80,194 +67,175 @@ const UserRoleForm = () => {
             return;
         }
 
-        const update = {
-            id: data.id,
-            role: data.role
-        };
-
         try {
-
             setUpdating(true);
 
-            await dispatch(updateRole(update)).unwrap();
+            await dispatch(updateRole({
+                id: data.id,
+                role: data.role
+            })).unwrap();
 
-            // navigate('/sidebar');
+            setData({
+                id: '',
+                role: ''
+            });
 
         } catch (err) {
-
             setSubmitError(
                 err?.message || err || 'Unable to update user role'
             );
-
         } finally {
-
             setUpdating(false);
-
         }
-
     };
-
 
     // Loading
     if (status === 'loading' || rolesStatus === 'loading') {
-        return <div className="p-5">Loading users and roles...</div>;
-    }
-
-
-    // Error
-    if (status === 'failed' || rolesStatus === 'failed') {
         return (
-            <div className="text-red-500 p-5">
-                Error: {error?.message || error || 'Unable to load data'}
+            <div className="role-loading">
+                <div className="role-spinner"></div>
+                <p>Loading users and roles...</p>
             </div>
         );
     }
 
+    // Error
+    if (status === 'failed' || rolesStatus === 'failed') {
+        return (
+            <div className="role-error">
+                {error?.message || error || 'Unable to load data'}
+            </div>
+        );
+    }
 
     return (
+        <div className="role-page">
 
-        <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+            <div className="role-card">
 
-            <div className="sm:mx-auto sm:w-full sm:max-w-md">
+                {/* Header */}
+                <div className="role-header">
 
-                <div className="bg-white py-8 px-4 shadow-lg sm:rounded-lg sm:px-10">
-
-                    {/* Header */}
-
-                    <div className="text-center mb-8">
-
+                    <div className="role-logo-wrapper">
                         <img
                             src={logo}
                             alt="Logo"
-                            className="my-5 mx-auto w-24"
+                            className="role-logo"
                         />
+                    </div>
 
-                        <h2 className="text-2xl font-bold text-gray-800">
-                            Assign Role to User
-                        </h2>
+                    <h2>Assign User Role</h2>
 
-                        <p className="mt-2 text-sm text-gray-600">
-                            Select a user and assign an appropriate role.
-                        </p>
+                    <p>
+                        Manage user permissions by assigning
+                        appropriate roles to registered users.
+                    </p>
+
+                </div>
+
+                {/* Form */}
+                <form onSubmit={handleSubmit} className="role-form">
+
+                    <div className="role-field">
+
+                        <label htmlFor="id">
+                            Select User
+                        </label>
+
+                        <select
+                            id="id"
+                            name="id"
+                            value={data.id}
+                            onChange={handleChange}
+                            required
+                        >
+                            <option value="">
+                                Choose a user
+                            </option>
+
+                            {users?.map(userItem => (
+                                <option
+                                    key={userItem.id}
+                                    value={userItem.id}
+                                >
+                                    {userItem.name} ({userItem.email})
+                                </option>
+                            ))}
+                        </select>
+
+                        <small>
+                            Select the account you want to update.
+                        </small>
 
                     </div>
 
+                    <div className="role-field">
 
-                    <form onSubmit={handleSubmit} className="space-y-6">
+                        <label htmlFor="role">
+                            Select Role
+                        </label>
 
-                        {/* Select User */}
-
-                        <div>
-
-                            <label
-                                htmlFor="id"
-                                className="block text-sm font-medium text-gray-700 mb-2"
-                            >
-                                Select User
-                            </label>
-
-                            <select
-                                id="id"
-                                name="id"
-                                value={data.id}
-                                onChange={handleChange}
-                                className="w-full border border-gray-300 rounded-lg py-3 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                required
-                            >
-
-                                <option value="">
-                                    -- Select User --
-                                </option>
-
-                                {users?.map(userItem => (
-
-                                    <option
-                                        key={userItem.id}
-                                        value={userItem.id}
-                                    >
-                                        {userItem.name} ({userItem.email})
-                                    </option>
-
-                                ))}
-
-                            </select>
-
-                        </div>
-
-
-                        {/* Select Role */}
-
-                        <div>
-
-                            <label
-                                htmlFor="role"
-                                className="block text-sm font-medium text-gray-700 mb-2"
-                            >
-                                Select Role
-                            </label>
-
-                            <select
-                                id="role"
-                                name="role"
-                                value={data.role}
-                                onChange={handleChange}
-                                className="w-full border border-gray-300 rounded-lg py-3 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                required
-                            >
-
-                                <option value="">
-                                    -- Select Role --
-                                </option>
-
-                                {roles?.map(role => (
-
-                                    <option
-                                        key={role.id}
-                                        value={role.id}
-                                    >
-                                        {role.name}
-                                    </option>
-
-                                ))}
-
-                            </select>
-
-                        </div>
-
-
-                        {/* Error message */}
-
-                        {submitError && (
-
-                            <p className="text-sm text-red-600">
-                                {submitError}
-                            </p>
-
-                        )}
-
-
-                        {/* Submit */}
-
-                        <button
-                            type="submit"
-                            disabled={updating || !data.id || !data.role}
-                            className="w-full flex justify-center py-3 px-4 rounded-lg text-white font-medium bg-blue-700 hover:bg-blue-800 disabled:opacity-50"
+                        <select
+                            id="role"
+                            name="role"
+                            value={data.role}
+                            onChange={handleChange}
+                            required
                         >
+                            <option value="">
+                                Choose a role
+                            </option>
 
-                            {updating ? 'Updating...' : 'Assign Role'}
+                            {roles?.map(role => (
+                                <option
+                                    key={role.id}
+                                    value={role.id}
+                                >
+                                    {role.name}
+                                </option>
+                            ))}
+                        </select>
 
-                        </button>
+                        <small>
+                            Choose the permissions level for this user.
+                        </small>
 
-                    </form>
+                    </div>
 
+                    {submitError && (
+                        <div className="role-submit-error">
+                            {submitError}
+                        </div>
+                    )}
+
+                    <button
+                        type="submit"
+                        disabled={
+                            updating ||
+                            !data.id ||
+                            !data.role
+                        }
+                    >
+                        {updating ? (
+                            <>
+                                <span className="button-spinner"></span>
+                                Updating Role...
+                            </>
+                        ) : (
+                            'Assign Role'
+                        )}
+                    </button>
+
+                </form>
+
+                <div className="role-footer">
+                    <span>Secure User Management</span>
                 </div>
 
             </div>
 
         </div>
-
     );
-
 };
 
 export default UserRoleForm;

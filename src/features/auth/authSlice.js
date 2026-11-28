@@ -240,6 +240,31 @@ export const updateRole = createAsyncThunk(
 );
 
 
+export const updateUserStatus = createAsyncThunk(
+    'auth/updateUserStatus',
+    async ({ id, status }, thunkAPI) => {
+
+        try {
+            const token = localStorage.getItem('token');
+            const response = await axios.put(
+                `${API_URL}/users/${id}/status`,
+                { status },
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                }
+            );
+            return response.data;
+        } catch (err) {
+            return thunkAPI.rejectWithValue(
+                err.response?.data || err.message
+            );
+        }
+    }
+);
+
+
 // ==========================================
 // REGISTER
 // ==========================================
@@ -329,6 +354,7 @@ const authSlice = createSlice({
     assignStatus: 'idle',
     rolesPermStatus:'idle',
     assignSuccess: false,
+    updateStatus: 'idle',
   },
 
   reducers: {
@@ -436,6 +462,36 @@ const authSlice = createSlice({
         state.status = "failed";
         state.error = action.payload;
       })
+
+      // UPDATE USER STATUS
+      
+.addCase(updateUserStatus.pending, (state) => {
+    state.updateStatus = 'loading';
+    state.error = null;
+})
+
+.addCase(updateUserStatus.fulfilled, (state, action) => {
+    state.updateStatus = 'succeeded';
+
+    const updatedUser = action.payload.user || action.payload;
+
+    const index = state.users.findIndex(
+        user => user.id === updatedUser.id
+    );
+
+    if (index !== -1) {
+        state.users[index] = {
+            ...state.users[index],
+            ...updatedUser
+        };
+    }
+})
+
+.addCase(updateUserStatus.rejected, (state, action) => {
+    state.updateStatus = 'failed';
+    state.error = action.payload || action.error.message;
+})
+
 
       // REGISTER
       .addCase(register.pending, (state) => {
